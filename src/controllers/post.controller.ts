@@ -1,3 +1,4 @@
+
 import {inject} from '@loopback/core';
 import {
   Count,
@@ -19,7 +20,6 @@ import {
 } from '@loopback/rest';
 import {Post} from '../models';
 import {PostRepository} from '../repositories';
-
 export class PostController {
   constructor(
     @repository(PostRepository)
@@ -59,6 +59,7 @@ export class PostController {
     return this.postRepository.count(where);
   }
 
+  // @intercept(MyInterceptorInterceptor.name)
   @get('/posts')
   @response(200, {
     description: 'Array of Post model instances',
@@ -74,9 +75,8 @@ export class PostController {
   async find(
     @param.filter(Post) filter?: Filter<Post>,
   ): Promise<Post[]> {
-    this.response.set('Access-Control-Expose-Headers', 'X-Total-Count')
-    this.response.set('X-Total-Count', '16')
-    return this.postRepository.find(filter);
+    console.log(filter);
+    return this.postRepository.find(filter, {offset: filter?.offset});
   }
 
   @patch('/posts')
