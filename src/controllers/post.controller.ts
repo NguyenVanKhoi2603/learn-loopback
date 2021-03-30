@@ -1,21 +1,21 @@
+import {inject} from '@loopback/core';
 import {
   Count,
   CountSchema,
   Filter,
   FilterExcludingWhere,
   repository,
-  Where,
+  Where
 } from '@loopback/repository';
 import {
-  post,
-  param,
-  get,
-  getModelSchemaRef,
-  patch,
+  del, get,
+  getModelSchemaRef, param,
+  patch, post,
   put,
-  del,
   requestBody,
   response,
+  Response,
+  RestBindings
 } from '@loopback/rest';
 import {Post} from '../models';
 import {PostRepository} from '../repositories';
@@ -23,8 +23,9 @@ import {PostRepository} from '../repositories';
 export class PostController {
   constructor(
     @repository(PostRepository)
-    public postRepository : PostRepository,
-  ) {}
+    public postRepository: PostRepository,
+    @inject(RestBindings.Http.RESPONSE) private response: Response
+  ) { }
 
   @post('/posts')
   @response(200, {
@@ -73,6 +74,8 @@ export class PostController {
   async find(
     @param.filter(Post) filter?: Filter<Post>,
   ): Promise<Post[]> {
+    this.response.set('Access-Control-Expose-Headers', 'X-Total-Count')
+    this.response.set('X-Total-Count', '16')
     return this.postRepository.find(filter);
   }
 

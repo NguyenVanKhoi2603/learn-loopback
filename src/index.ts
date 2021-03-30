@@ -30,6 +30,10 @@ if (require.main === module) {
         // useful when used with OpenAPI-to-GraphQL to locate your application
         setServersFromRequest: true,
       },
+      expressSettings: {
+        'Access-Control-Expose-Headers': 'X-Total-Count',
+      },
+
     },
   };
   main(config).catch(err => {
